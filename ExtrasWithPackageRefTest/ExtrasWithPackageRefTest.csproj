@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net46;net47</TargetFrameworks>
+  </PropertyGroup>
+
+  <Target Name="LogProgess" BeforeTargets="BeforeBuild">
+    <LogProcessInfo />
+  </Target>
+  
+  <ItemGroup>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.6.0" PrivateAssets="All"/>
+  </ItemGroup>
+  
+  <UsingTask
+    TaskName="LogProcessInfo"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup />
+    <Task>
+      <Reference Include="System.Xml"/>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[  
+            Log.LogMessage(MessageImportance.High, "Running in " + System.Diagnostics.Process.GetCurrentProcess().Id + "/" + System.Diagnostics.Process.GetCurrentProcess().ProcessName);
+          ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+  
+  <Import Project="$(MSBuildSdkExtrasTargets)" Condition="Exists('$(MSBuildSdkExtrasTargets)')"/>
+</Project>
